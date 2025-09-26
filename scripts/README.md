@@ -47,10 +47,54 @@ sh scripts/manage-service.sh logs      # 查看日志
 
 **特性**：
 - 自动检测服务运行状态
+- 自动配置浏览器环境变量
 - 优雅停止和强制终止
 - PID 文件管理
 - 实时日志查看
 - API 健康检查
+
+### `env-setup.sh` - 环境变量配置脚本
+
+**功能**：
+- 统一配置 Puppeteer 环境变量
+- 自动检测系统浏览器路径
+- 设置缓存目录
+- 环境变量调试和验证
+
+**使用方法**：
+```bash
+# 直接执行查看配置
+sh scripts/env-setup.sh
+
+# 在其他脚本中加载
+source scripts/env-setup.sh
+setup_puppeteer_env
+```
+
+**特性**：
+- 智能浏览器检测（支持 Chromium、Chrome）
+- RPM 包路径自动识别
+- 环境变量导出和验证
+- 跨脚本配置共享
+
+### `test-service.sh` - 服务功能测试脚本
+
+**功能**：
+- 测试环境配置完整性
+- 验证脚本功能正常
+- 检查项目依赖状态
+- 显示使用建议和帮助
+
+**使用方法**：
+```bash
+sh scripts/test-service.sh
+```
+
+**特性**：
+- 全面的环境检查
+- 友好的错误提示
+- 使用建议和指导
+- 快速诊断问题
 
 ## 🔧 配置文件位置
 

@@ -3,8 +3,12 @@
 # MDTopic 服务管理脚本
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
 PID_FILE="/tmp/mdtopic.pid"
 LOG_FILE="/var/log/mdtopic.log"
+
+# 加载环境配置
+source "$SCRIPT_DIR/env-setup.sh"
 
 show_help() {
     echo "🔧 MDTopic 服务管理脚本"
@@ -51,7 +55,7 @@ start_service() {
     fi
     
     echo "🚀 启动 MDTopic 服务..."
-    cd "$SCRIPT_DIR"
+    cd "$PROJECT_DIR"
     
     # 检查端口占用
     if lsof -Pi :3000 -sTCP:LISTEN -t >/dev/null 2>&1; then
@@ -60,8 +64,15 @@ start_service() {
         sleep 2
     fi
     
-    # 启动服务
-    nohup npm start > "$LOG_FILE" 2>&1 &
+    # 配置 Puppeteer 环境（使用 env-setup.sh 中的函数）
+    echo "🔧 配置 Puppeteer 环境..."
+    setup_puppeteer_env
+    
+    # 启动服务（带环境变量）
+    env PUPPETEER_SKIP_CHROMIUM_DOWNLOAD="$PUPPETEER_SKIP_CHROMIUM_DOWNLOAD" \
+        PUPPETEER_EXECUTABLE_PATH="$PUPPETEER_EXECUTABLE_PATH" \
+        PUPPETEER_CACHE_DIR="$PUPPETEER_CACHE_DIR" \
+        nohup npm start > "$LOG_FILE" 2>&1 &
     local pid=$!
     echo $pid > "$PID_FILE"
     
@@ -75,6 +86,7 @@ start_service() {
         echo "📍 访问地址: http://localhost:3000"
         echo "📍 进程ID: $pid"
         echo "📍 日志文件: $LOG_FILE"
+        echo "📍 浏览器路径: ${PUPPETEER_EXECUTABLE_PATH:-'Puppeteer 内置'}"
     else
         echo "❌ 服务启动失败，请检查日志: tail -f $LOG_FILE"
         return 1

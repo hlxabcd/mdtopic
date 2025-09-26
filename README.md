@@ -63,6 +63,12 @@ sh scripts/manage-service.sh start|stop|restart
 
 # 查看实时日志
 sh scripts/manage-service.sh logs
+
+# 测试服务功能
+sh scripts/test-service.sh
+
+# 配置环境变量（用于调试）
+sh scripts/env-setup.sh
 ```
 
 ### 命令行使用
