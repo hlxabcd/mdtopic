@@ -3,18 +3,22 @@
  * 统一管理所有Markdown转换的样式
  */
 
-// 默认的GitHub风格CSS样式
+// 默认的GitHub风格CSS样式 - 优化版
 const DEFAULT_CSS = `
+/* 条件加载字体，优先使用本地字体 */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
 
 body {
-  font-family: 'Inter', 'IBM Plex Sans', 'SF Pro Display', 'Helvetica Neue', 'Arial', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Noto Sans', 'Liberation Sans', sans-serif, 'Apple Color Emoji', 'Noto Color Emoji', 'Segoe UI Emoji';
+  font-family: 'Inter', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei UI', 'Microsoft YaHei', 'Source Han Sans SC', 'WenQuanYi Micro Hei', 'Helvetica Neue', 'Arial', sans-serif;
   line-height: 1.6;
-  padding: 20px;
+  padding: 24px;
   max-width: 800px;
   margin: 0 auto;
-  color: #333;
-  background-color: #fff;
+  color: #24292f;
+  background-color: #ffffff;
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -22,29 +26,32 @@ h1, h2, h3, h4, h5, h6 {
   margin-bottom: 16px;
   font-weight: 600;
   line-height: 1.25;
-  color: #1f2328;
+  color: #24292f;
 }
 
 h1 { 
   font-size: 2em; 
-  border-bottom: 1px solid #d1d9e0;
-  padding-bottom: 10px;
+  border-bottom: 1px solid #d0d7de;
+  padding-bottom: 12px;
+  margin-bottom: 24px;
 }
 
 h2 { 
   font-size: 1.5em; 
-  border-bottom: 1px solid #d1d9e0;
-  padding-bottom: 8px;
+  border-bottom: 1px solid #d0d7de;
+  padding-bottom: 10px;
+  margin-bottom: 20px;
 }
 
 h3 { font-size: 1.25em; }
-h4 { font-size: 1em; }
-h5 { font-size: 0.875em; }
+h4 { font-size: 1.1em; }
+h5 { font-size: 0.95em; }
 h6 { font-size: 0.85em; color: #656d76; }
 
 p {
   margin-bottom: 16px;
-  color: #1f2328;
+  color: #24292f;
+  text-align: left;
 }
 
 ul, ol {
@@ -53,7 +60,8 @@ ul, ol {
 }
 
 li {
-  margin-bottom: 4px;
+  margin-bottom: 8px;
+  color: #24292f;
 }
 
 pre {
@@ -62,16 +70,17 @@ pre {
   padding: 16px;
   overflow: auto;
   margin-bottom: 16px;
-  border: 1px solid #d1d9e0;
+  border: 1px solid #d0d7de;
 }
 
 code {
-  font-family: 'JetBrains Mono', 'SF Mono', 'Menlo', SFMono-Regular, 'Monaco', Consolas, 'Liberation Mono', monospace;
+  font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', 'Monaco', 'Consolas', 'Liberation Mono', 'DejaVu Sans Mono', 'Ubuntu Mono', monospace;
   font-size: 85%;
   background-color: #f6f8fa;
   padding: 0.2em 0.4em;
-  border-radius: 3px;
-  border: 1px solid #d1d9e0;
+  border-radius: 6px;
+  border: 1px solid #d0d7de;
+  color: #24292f;
 }
 
 pre code {
@@ -340,10 +349,197 @@ function buildCSS(options = {}) {
   return `${baseCSS}\n${customCss}`;
 }
 
+// 本地字体版本（无外部依赖）
+const LOCAL_FONT_CSS = `
+body {
+  font-family: 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei UI', 'Microsoft YaHei', 'Source Han Sans SC', 'WenQuanYi Micro Hei', 'Noto Sans CJK SC', 'SimHei', 'Arial', 'Helvetica Neue', sans-serif;
+  line-height: 1.6;
+  padding: 24px;
+  max-width: 800px;
+  margin: 0 auto;
+  color: #24292f;
+  background-color: #ffffff;
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  margin-top: 24px;
+  margin-bottom: 16px;
+  font-weight: 600;
+  line-height: 1.25;
+  color: #24292f;
+}
+
+h1 { 
+  font-size: 2em; 
+  border-bottom: 1px solid #d0d7de;
+  padding-bottom: 12px;
+  margin-bottom: 24px;
+}
+
+h2 { 
+  font-size: 1.5em; 
+  border-bottom: 1px solid #d0d7de;
+  padding-bottom: 10px;
+  margin-bottom: 20px;
+}
+
+h3 { font-size: 1.25em; }
+h4 { font-size: 1.1em; }
+h5 { font-size: 0.95em; }
+h6 { font-size: 0.85em; color: #656d76; }
+
+p {
+  margin-bottom: 16px;
+  color: #24292f;
+  text-align: left;
+}
+
+ul, ol {
+  margin-bottom: 16px;
+  padding-left: 2em;
+}
+
+li {
+  margin-bottom: 8px;
+  color: #24292f;
+}
+
+pre {
+  background-color: #f6f8fa;
+  border-radius: 6px;
+  padding: 16px;
+  overflow: auto;
+  margin-bottom: 16px;
+  border: 1px solid #d0d7de;
+}
+
+code {
+  font-family: 'Monaco', 'Consolas', 'Liberation Mono', 'DejaVu Sans Mono', 'Ubuntu Mono', 'Courier New', monospace;
+  font-size: 85%;
+  background-color: #f6f8fa;
+  padding: 0.2em 0.4em;
+  border-radius: 6px;
+  border: 1px solid #d0d7de;
+  color: #24292f;
+}
+
+pre code {
+  background-color: transparent;
+  border: none;
+  padding: 0;
+  font-size: 14px;
+}
+
+blockquote {
+  padding: 8px 16px;
+  color: #656d76;
+  border-left: 0.25em solid #d0d7de;
+  margin: 16px 0;
+  background-color: #f6f8fa;
+  border-radius: 3px;
+}
+
+blockquote p {
+  margin-bottom: 8px;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 6px;
+}
+
+table {
+  border-spacing: 0;
+  border-collapse: collapse;
+  margin-bottom: 16px;
+  width: 100%;
+  border: 1px solid #d0d7de;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+table th, table td {
+  padding: 6px 13px;
+  border: 1px solid #d0d7de;
+  text-align: left;
+}
+
+table th {
+  background-color: #f6f8fa;
+  font-weight: 600;
+}
+
+table tr:nth-child(2n) {
+  background-color: #f6f8fa;
+}
+
+hr {
+  border: none;
+  border-top: 1px solid #d0d7de;
+  margin: 24px 0;
+}
+
+a {
+  color: #0969da;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+strong {
+  font-weight: 600;
+}
+
+em {
+  font-style: italic;
+}
+
+/* 任务列表样式 */
+.task-list-item {
+  list-style: none;
+  margin-left: -1.5em;
+}
+
+.task-list-item-checkbox {
+  margin-right: 8px;
+  margin-left: 0;
+}
+
+input[type="checkbox"] {
+  margin-right: 8px;
+}
+`;
+
+/**
+ * 获取预定义的CSS样式
+ * @param {string} theme - 主题名称: 'default', 'dark', 'minimal', 'local'
+ * @returns {string} CSS样式字符串
+ */
+function getThemeCSS(theme = 'default') {
+  switch (theme.toLowerCase()) {
+    case 'dark':
+      return DARK_CSS;
+    case 'minimal':
+      return MINIMAL_CSS;
+    case 'local':
+      return LOCAL_FONT_CSS;
+    case 'default':
+    default:
+      return DEFAULT_CSS;
+  }
+}
+
 module.exports = {
   DEFAULT_CSS,
   DARK_CSS,
   MINIMAL_CSS,
+  LOCAL_FONT_CSS,
   getThemeCSS,
   buildCSS
 };

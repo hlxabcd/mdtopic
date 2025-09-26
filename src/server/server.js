@@ -63,13 +63,14 @@ app.post('/api/convert', async (req, res) => {
 // API路由 - 获取支持的选项
 app.get('/api/options', (req, res) => {
   res.json({
-    formats: ['png', 'jpeg', 'webp'], // 添加WebP支持
-    theme: 'default', // 固定使用默认主题，确保统一风格
+    formats: ['png', 'jpeg', 'webp'],
+    themes: ['default', 'dark', 'minimal', 'local'], // 添加主题选项
+    defaultTheme: 'default', // 默认主题，会自动回退到local
     widthRange: { min: 200, max: 3000, default: 800 },
-    qualityRange: { min: 1, max: 100, default: 75 }, // 平衡质量和大小
-    scaleRange: { min: 1, max: 3, default: 2 }, // 保持高清晰度
+    qualityRange: { min: 1, max: 100, default: 75 },
+    scaleRange: { min: 1, max: 3, default: 2 },
     maxContentLength: 100000,
-    note: 'Web和CLI模式使用统一的默认样式，确保视觉效果一致。推荐使用WebP格式获得更小的文件大小'
+    note: '智能字体加载：优先使用外部字体，网络问题时自动切换到本地字体确保渲染效果。'
   });
 });
 
