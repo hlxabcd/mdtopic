@@ -122,7 +122,7 @@ fi
 echo ""
 echo "📦 第3步: 安装系统依赖..."
 
-# 安装 Chromium 和字体
+# 安装 Chromium 和字体（包含emoji支持）
 dnf install -y \
     chromium \
     curl \
@@ -133,7 +133,24 @@ dnf install -y \
     dejavu-sans-fonts \
     google-noto-fonts \
     google-noto-cjk-fonts \
-    google-noto-emoji-fonts
+    google-noto-emoji-fonts \
+    fontawesome-fonts
+
+# 更新字体缓存
+echo "🔄 更新字体缓存..."
+fc-cache -fv
+
+# 验证emoji字体安装
+echo "🔍 验证emoji字体安装..."
+if fc-list | grep -i "noto.*emoji" > /dev/null; then
+    echo "✅ Noto Emoji字体已安装"
+else
+    echo "⚠️  Noto Emoji字体可能未正确安装"
+fi
+
+# 检查可用emoji字体
+echo "📝 可用emoji字体列表:"
+fc-list | grep -i emoji | head -3
 
 echo "✅ 系统依赖安装完成"
 

@@ -77,6 +77,31 @@ setup_puppeteer_env
 - 环境变量导出和验证
 - 跨脚本配置共享
 
+### `fix-emoji-fonts.sh` - Emoji字体修复脚本
+
+**功能**：
+- 检查并安装emoji字体包
+- 更新字体缓存
+- 验证emoji字体安装
+- 适用于已部署的服务器环境
+
+**使用方法**：
+```bash
+# 需要 root 权限
+sudo bash scripts/fix-emoji-fonts.sh
+```
+
+**适用场景**：
+- 服务器emoji显示异常
+- 字体缓存需要更新
+- 新安装emoji字体包
+
+**特性**：
+- 自动检测系统类型（RHEL/Debian）
+- 智能安装对应emoji字体包
+- 字体验证和测试
+- 服务重启建议
+
 ### `test-service.sh` - 服务功能测试脚本
 
 **功能**：
