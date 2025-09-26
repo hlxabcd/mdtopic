@@ -105,26 +105,12 @@ textarea:focus {
   font-size: 16px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  /* 确保emoji使用彩色字体 */
-  font-variant-emoji: emoji;
-  text-rendering: optimizeLegibility;
-  -webkit-font-feature-settings: "liga" 1, "kern" 1;
-  font-feature-settings: "liga" 1, "kern" 1;
 }
 
-/* 确保预览区域的emoji正确显示 - 优先级更高的选择器 */
-.markdown-preview .emoji, 
-.markdown-preview [data-emoji],
-.markdown-preview > div .emoji,
-.markdown-preview > div [data-emoji] {
-  font-family: 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', sans-serif !important;
-  font-style: normal !important;
-  font-variant-emoji: emoji !important;
-}
-
-/* 通用emoji支持 - 确保预览区域所有emoji字符都使用彩色字体 */
-.markdown-preview > div * {
-  font-variant-emoji: emoji;
+/* 简化的emoji支持 */
+.markdown-preview .emoji {
+  font-family: 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', sans-serif;
+  font-style: normal;
 }
 
 /* 任务列表样式 - 与后端保持一致 */
