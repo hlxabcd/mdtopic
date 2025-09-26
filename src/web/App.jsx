@@ -6,7 +6,8 @@ import markdownItTaskLists from 'markdown-it-task-lists';
 const md = new MarkdownIt({
   html: true,
   linkify: true,
-  typographer: true
+  typographer: true,
+  breaks: false  // 与后端保持一致
 });
 
 // 启用任务列表插件，与后端保持一致
@@ -30,16 +31,24 @@ function App() {
 
     setLoading(true);
     try {
+      // 设置请求超时
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 30000); // 30秒超时
+
       const response = await fetch('/api/convert', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ markdown }),
+        signal: controller.signal
       });
 
+      clearTimeout(timeoutId);
+
       if (!response.ok) {
-        throw new Error('转换失败');
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || `服务器错误: ${response.status}`);
       }
 
       const blob = await response.blob();
@@ -47,7 +56,11 @@ function App() {
       setImageUrl(url);
     } catch (error) {
       console.error('转换失败:', error);
-      alert('转换失败，请重试');
+      if (error.name === 'AbortError') {
+        alert('转换超时，请重试。如果内容较长，请稍等片刻。');
+      } else {
+        alert(`转换失败: ${error.message}`);
+      }
     } finally {
       setLoading(false);
     }
@@ -127,10 +140,9 @@ function App() {
         </div>
         <div className="preview-section">
           <h2>预览</h2>
-          <div
-            className="markdown-preview"
-            dangerouslySetInnerHTML={{ __html: md.render(markdown) }}
-          />
+          <div className="markdown-preview">
+            <div dangerouslySetInnerHTML={{ __html: md.render(markdown) }} />
+          </div>
         </div>
       </div>
       <div className="actions">

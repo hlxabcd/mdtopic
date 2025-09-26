@@ -32,12 +32,12 @@ app.post('/api/convert', async (req, res) => {
       });
     }
 
-    // 使用核心转换器
+    // 使用核心转换器 - 默认使用local主题确保字体效果
     const imageBuffer = await convertMarkdownToImage(markdown, {
       width: options.width || 800,
       format: options.format || 'png',
       quality: options.quality || 90,
-      theme: options.theme || 'default',
+      theme: options.theme || 'local',  // 改为默认使用local主题
       customCss: options.customCss || ''
     });
 

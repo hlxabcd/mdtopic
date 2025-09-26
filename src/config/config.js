@@ -55,10 +55,10 @@ const DEFAULT_CONFIG = {
   // CSS主题
   theme: 'default',
   
-  // 超时设置 - 优化响应速度
+  // 超时设置 - 确保稳定性
   timeout: {
-    pageLoad: 5000,    // 减少页面加载超时
-    screenshot: 3000   // 减少截图超时
+    pageLoad: 10000,   // 增加页面加载超时
+    screenshot: 8000   // 增加截图超时
   }
 };
 

@@ -9,7 +9,7 @@ const DEFAULT_CSS = `
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
 
 body {
-  font-family: 'Inter', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei UI', 'Microsoft YaHei', 'Source Han Sans SC', 'WenQuanYi Micro Hei', 'Helvetica Neue', 'Arial', sans-serif;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Roboto', 'Helvetica Neue', 'PingFang SC', 'Hiragino Sans GB', 'Source Han Sans CN', 'Noto Sans CJK SC', 'Noto Sans', 'Liberation Sans', 'Microsoft YaHei UI', 'Microsoft YaHei', Arial, sans-serif;
   line-height: 1.6;
   padding: 24px;
   max-width: 800px;
@@ -74,7 +74,7 @@ pre {
 }
 
 code {
-  font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', 'Monaco', 'Consolas', 'Liberation Mono', 'DejaVu Sans Mono', 'Ubuntu Mono', monospace;
+  font-family: 'JetBrains Mono', 'SF Mono', 'Monaco', 'Roboto Mono', 'Liberation Mono', 'Fira Code', 'Consolas', 'DejaVu Sans Mono', 'Ubuntu Mono', monospace;
   font-size: 85%;
   background-color: #f6f8fa;
   padding: 0.2em 0.4em;
@@ -349,10 +349,10 @@ function buildCSS(options = {}) {
   return `${baseCSS}\n${customCss}`;
 }
 
-// 本地字体版本（无外部依赖）
+// 本地字体版本（兼容本地和Docker服务器字体）
 const LOCAL_FONT_CSS = `
 body {
-  font-family: 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei UI', 'Microsoft YaHei', 'Source Han Sans SC', 'WenQuanYi Micro Hei', 'Noto Sans CJK SC', 'SimHei', 'Arial', 'Helvetica Neue', sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Roboto', 'Helvetica Neue', 'PingFang SC', 'Hiragino Sans GB', 'Source Han Sans CN', 'Noto Sans CJK SC', 'Noto Sans', 'Liberation Sans', 'Microsoft YaHei UI', 'Microsoft YaHei', Arial, sans-serif;
   line-height: 1.6;
   padding: 24px;
   max-width: 800px;
@@ -417,7 +417,7 @@ pre {
 }
 
 code {
-  font-family: 'Monaco', 'Consolas', 'Liberation Mono', 'DejaVu Sans Mono', 'Ubuntu Mono', 'Courier New', monospace;
+  font-family: 'JetBrains Mono', 'SF Mono', 'Monaco', 'Roboto Mono', 'Liberation Mono', 'Fira Code', 'Consolas', 'DejaVu Sans Mono', 'Ubuntu Mono', 'Courier New', monospace;
   font-size: 85%;
   background-color: #f6f8fa;
   padding: 0.2em 0.4em;
