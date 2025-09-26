@@ -1,0 +1,39 @@
+{
+  "name": "mdtopic",
+  "version": "2.0.1",
+  "description": "A unified markdown to image converter with web and CLI support",
+  "main": "lib/markdown-converter.js",
+  "bin": {
+    "mdtopic": "./index.js"
+  },
+  "scripts": {
+    "start": "node src/server/server.js",
+    "dev": "cd src/web && vite",
+    "build": "cd src/web && vite build",
+    "cli": "node index.js",
+    "test": "node -e \"const { convertMarkdownToImage } = require('./lib/markdown-converter'); console.log('✅ Core library loaded successfully');\"",
+    "test:web": "curl -f http://localhost:3000/api/health || echo '⚠️ Web server not running'"
+  },
+  "keywords": [
+    "markdown",
+    "image",
+    "converter"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "commander": "^14.0.0",
+    "express": "^4.18.2",
+    "glob": "^11.0.3",
+    "markdown-it": "^13.0.1",
+    "markdown-it-task-lists": "^2.1.1",
+    "puppeteer": "^21.1.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.0.4",
+    "vite": "^4.4.9"
+  }
+}
