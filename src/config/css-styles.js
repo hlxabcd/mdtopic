@@ -9,7 +9,7 @@ const DEFAULT_CSS = `
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
 
 body {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Roboto', 'Helvetica Neue', 'PingFang SC', 'Hiragino Sans GB', 'Source Han Sans CN', 'Noto Sans CJK SC', 'Noto Sans', 'Liberation Sans', 'Microsoft YaHei UI', 'Microsoft YaHei', Arial, sans-serif;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Roboto', 'Helvetica Neue', 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', 'PingFang SC', 'Hiragino Sans GB', 'Source Han Sans CN', 'Noto Sans CJK SC', 'Noto Sans', 'Liberation Sans', 'Microsoft YaHei UI', 'Microsoft YaHei', Arial, sans-serif;
   line-height: 1.6;
   padding: 24px;
   max-width: 800px;
@@ -19,6 +19,12 @@ body {
   font-size: 16px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* 确保emoji正确显示 */
+.emoji {
+  font-family: 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', sans-serif;
+  font-style: normal;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -349,10 +355,10 @@ function buildCSS(options = {}) {
   return `${baseCSS}\n${customCss}`;
 }
 
-// 本地字体版本（兼容本地和Docker服务器字体）
+// 本地字体版本（兼容本地和Docker服务器字体，支持emoji）
 const LOCAL_FONT_CSS = `
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Roboto', 'Helvetica Neue', 'PingFang SC', 'Hiragino Sans GB', 'Source Han Sans CN', 'Noto Sans CJK SC', 'Noto Sans', 'Liberation Sans', 'Microsoft YaHei UI', 'Microsoft YaHei', Arial, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Roboto', 'Helvetica Neue', 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', 'PingFang SC', 'Hiragino Sans GB', 'Source Han Sans CN', 'Noto Sans CJK SC', 'Noto Sans', 'Liberation Sans', 'Microsoft YaHei UI', 'Microsoft YaHei', Arial, sans-serif;
   line-height: 1.6;
   padding: 24px;
   max-width: 800px;
@@ -362,6 +368,12 @@ body {
   font-size: 16px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* 确保emoji正确显示 */
+.emoji {
+  font-family: 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', sans-serif;
+  font-style: normal;
 }
 
 h1, h2, h3, h4, h5, h6 {

@@ -93,9 +93,9 @@ textarea:focus {
   display: none;
 }
 
-/* 内部样式与后端完全一致 - 兼容本地和Docker字体 */
+/* 内部样式与后端完全一致 - 兼容本地和Docker字体，支持emoji */
 .markdown-preview > div {
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Roboto', 'Helvetica Neue', 'PingFang SC', 'Hiragino Sans GB', 'Source Han Sans CN', 'Noto Sans CJK SC', 'Noto Sans', 'Liberation Sans', 'Microsoft YaHei UI', 'Microsoft YaHei', Arial, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Roboto', 'Helvetica Neue', 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', 'PingFang SC', 'Hiragino Sans GB', 'Source Han Sans CN', 'Noto Sans CJK SC', 'Noto Sans', 'Liberation Sans', 'Microsoft YaHei UI', 'Microsoft YaHei', Arial, sans-serif;
   line-height: 1.6;
   padding: 24px;
   max-width: 800px;
