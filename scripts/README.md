@@ -100,7 +100,34 @@ sudo bash scripts/fix-emoji-fonts.sh
 - 自动检测系统类型（RHEL/Debian）
 - 智能安装对应emoji字体包
 - 字体验证和测试
-- 服务重启建议
+- 生成测试截图验证效果
+- 服务器特定修复建议
+
+### `test-emoji-server.sh` - 服务器Emoji测试脚本
+
+**功能**：
+- 专门诊断服务器环境emoji显示问题
+- 全面检查系统字体配置
+- 生成emoji渲染测试截图
+- 提供详细的修复建议
+
+**使用方法**：
+```bash
+# 需要 root 权限
+sudo bash scripts/test-emoji-server.sh
+```
+
+**适用场景**：
+- 服务器emoji显示为黑白方块
+- 需要详细诊断字体环境
+- 验证emoji渲染能力
+
+**特性**：
+- 系统字体包检查
+- Chromium渲染测试
+- 生成诊断截图
+- 分步修复指导
+- 支持RHEL和Debian系统
 
 ### `test-service.sh` - 服务功能测试脚本
 

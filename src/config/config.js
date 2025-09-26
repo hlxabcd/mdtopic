@@ -16,14 +16,13 @@ const DEFAULT_CONFIG = {
     breaks: false
   },
   
-  // Puppeteer 优化配置 - 针对速度和资源使用优化
+  // Puppeteer 优化配置 - 针对速度和资源使用优化，支持emoji渲染
   puppeteer: {
     headless: "new",
     args: [
       '--no-sandbox', 
       '--disable-setuid-sandbox',
       '--disable-dev-shm-usage',
-      '--disable-gpu',
       '--no-first-run',
       '--no-zygote',
       '--disable-background-timer-throttling',
@@ -38,7 +37,12 @@ const DEFAULT_CONFIG = {
       '--mute-audio',
       '--no-default-browser-check',
       '--no-pings',
-      '--memory-pressure-off'
+      '--memory-pressure-off',
+      // emoji渲染支持
+      '--enable-font-antialiasing',
+      '--enable-features=VaapiVideoDecoder',
+      '--font-render-hinting=none',
+      '--enable-gpu-rasterization'
     ]
   },
   

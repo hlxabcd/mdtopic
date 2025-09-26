@@ -19,12 +19,27 @@ body {
   font-size: 16px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  /* 确保emoji使用彩色字体 */
+  font-variant-emoji: emoji;
 }
 
-/* 确保emoji正确显示 */
-.emoji {
-  font-family: 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', sans-serif;
-  font-style: normal;
+/* 确保emoji正确显示 - 优先级更高的选择器 */
+.emoji, [data-emoji] {
+  font-family: 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', sans-serif !important;
+  font-style: normal !important;
+  font-variant-emoji: emoji !important;
+}
+
+/* 通用emoji支持 - 确保所有emoji字符都使用彩色字体 */
+* {
+  font-variant-emoji: emoji;
+}
+
+/* Webkit特定的emoji渲染优化 */
+body, p, h1, h2, h3, h4, h5, h6, li, td, th, blockquote {
+  text-rendering: optimizeLegibility;
+  -webkit-font-feature-settings: "liga" 1, "kern" 1;
+  font-feature-settings: "liga" 1, "kern" 1;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -368,12 +383,27 @@ body {
   font-size: 16px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  /* 确保emoji使用彩色字体 */
+  font-variant-emoji: emoji;
 }
 
-/* 确保emoji正确显示 */
-.emoji {
-  font-family: 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', sans-serif;
-  font-style: normal;
+/* 确保emoji正确显示 - 优先级更高的选择器 */
+.emoji, [data-emoji] {
+  font-family: 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', sans-serif !important;
+  font-style: normal !important;
+  font-variant-emoji: emoji !important;
+}
+
+/* 通用emoji支持 - 确保所有emoji字符都使用彩色字体 */
+* {
+  font-variant-emoji: emoji;
+}
+
+/* Webkit特定的emoji渲染优化 */
+body, p, h1, h2, h3, h4, h5, h6, li, td, th, blockquote {
+  text-rendering: optimizeLegibility;
+  -webkit-font-feature-settings: "liga" 1, "kern" 1;
+  font-feature-settings: "liga" 1, "kern" 1;
 }
 
 h1, h2, h3, h4, h5, h6 {
