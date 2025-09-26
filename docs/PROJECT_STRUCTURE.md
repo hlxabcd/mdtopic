@@ -11,6 +11,11 @@ mdtopic/
 ├── lib/                        # 核心库
 │   └── markdown-converter.js   # Markdown转换核心逻辑
 ├── 
+├── scripts/                    # 部署和管理脚本
+│   ├── README.md              # 脚本说明文档
+│   ├── install-all.sh         # 一键安装脚本
+│   └── manage-service.sh      # 服务管理脚本
+├── 
 ├── src/                        # 源代码
 │   ├── config/                 # 配置模块
 │   │   ├── config.js          # 主配置文件
@@ -40,111 +45,201 @@ mdtopic/
 │   └── test-integration-dark.png # 暗色主题测试
 ├── 
 ├── docs/                     # 项目文档
+│   ├── INSTALLATION.md       # 安装指南
 │   ├── PROJECT_STRUCTURE.md  # 本文档
 │   ├── API_REFERENCE.md      # API参考
 │   ├── DEPLOYMENT.md         # 部署指南
 │   └── DEVELOPMENT.md        # 开发指南
 └── 
-└── .delete/                  # 回收站目录
-    └── backup-YYYYMMDD/      # 按日期分类的备份
 ```
 
 ## 🔧 核心组件说明
 
-### 1. 核心转换器 (`lib/markdown-converter.js`)
-- **功能**: Markdown到图片的核心转换逻辑
-- **特性**: 
-  - 浏览器实例复用，性能优化
-  - 智能内容分析和优化
-  - 支持多种输出格式 (PNG/JPEG/WebP)
-  - 错误处理和资源清理
+### 1. CLI 工具 (`index.js`)
+**入口文件**，提供命令行接口：
+- 支持单文件和批量转换
+- 多种输出格式 (PNG, JPEG, WebP)
+- 智能优化和预设模式
+- 可全局安装使用
 
-### 2. CLI工具 (`index.js`)
-- **功能**: 命令行接口
-- **用法**: `npx mdtopic convert input.md [output.png]`
-- **特性**: 
-  - 智能模式和预设优化
-  - 批量处理支持
-  - 详细进度显示
+### 2. 核心转换库 (`lib/markdown-converter.js`)
+**核心转换引擎**，负责：
+- Markdown 解析和 HTML 渲染
+- Puppeteer 浏览器控制
+- 图片生成和优化
+- 样式应用和字体处理
 
-### 3. Web服务 (`src/server/server.js`)
-- **功能**: RESTful API和静态文件服务
-- **端点**: 
-  - `POST /api/convert` - 转换Markdown
-  - `GET /api/options` - 获取支持的选项
-  - `GET /api/health` - 健康检查
-- **特性**: 统一错误处理，请求限制
+### 3. Web 服务器 (`src/server/server.js`)
+**Express.js 后端服务**，提供：
+- RESTful API 接口
+- 静态文件服务
+- 错误处理和日志
+- 健康检查接口
 
-### 4. Web界面 (`src/web/`)
-- **技术栈**: React + Vite
-- **功能**: 实时预览和转换
-- **特性**: 响应式设计，支持移动端
+### 4. 前端应用 (`src/web/`)
+**React + Vite 前端**，包含：
+- 实时 Markdown 编辑器
+- 即时预览功能
+- 参数配置界面
+- 文件下载功能
 
-### 5. 配置系统 (`src/config/`)
-- **config.js**: 统一的配置管理
-- **css-styles.js**: 动态CSS样式生成
-- **特性**: 智能内容分析，预设优化模式
+### 5. 配置模块 (`src/config/`)
+**系统配置管理**：
+- `config.js`: 主要配置参数
+- `css-styles.js`: CSS 样式生成器
 
-## 🎯 使用场景
+### 6. 部署脚本 (`scripts/`)
+**自动化部署工具**：
+- `install-all.sh`: 一键安装脚本
+- `manage-service.sh`: 服务管理脚本
 
-### 1. Web界面
-- 适合：实时预览，单次转换
-- 访问：http://localhost:3000
+## 🏗️ 技术架构
 
-### 2. CLI工具
-- 适合：批量处理，脚本集成
-- 命令：`mdtopic convert file.md`
+### 前端技术栈
+- **React 18**: 用户界面框架
+- **Vite**: 构建工具和开发服务器
+- **CSS3**: 样式和布局
+- **Fetch API**: HTTP 客户端
 
-### 3. Docker部署
-- 适合：云服务器，生产环境
-- 启动：`./docker/start.sh`
+### 后端技术栈
+- **Node.js**: 运行时环境
+- **Express.js**: Web 框架
+- **Puppeteer**: 浏览器自动化
+- **Markdown-it**: Markdown 解析器
 
+### 部署技术
+- **Docker**: 容器化部署
+- **Docker Compose**: 容器编排
+- **Bash Scripts**: 自动化脚本
+- **Systemd**: 服务管理 (可选)
 
-
-## 🔄 数据流
+## 📊 数据流
 
 ```
-Markdown文本 → markdown-it解析 → HTML生成 → Puppeteer渲染 → 图片输出
-                     ↑
-                配置系统优化
+┌─────────────┐    ┌─────────────┐    ┌─────────────┐
+│   CLI/Web   │───▶│   Express   │───▶│  Converter  │
+│   Interface │    │   Server    │    │   Library   │
+└─────────────┘    └─────────────┘    └─────────────┘
+                                             │
+                                             ▼
+                                    ┌─────────────┐
+                                    │  Puppeteer  │
+                                    │   Browser   │
+                                    └─────────────┘
+                                             │
+                                             ▼
+                                    ┌─────────────┐
+                                    │    Image    │
+                                    │   Output    │
+                                    └─────────────┘
 ```
 
-## 📦 依赖关系
+1. **输入**: Markdown 文本 + 配置参数
+2. **解析**: Markdown-it 解析为 HTML
+3. **渲染**: Puppeteer 浏览器渲染
+4. **生成**: 截图并优化为图片
+5. **输出**: 返回图片数据
 
-### 核心依赖
-- `puppeteer`: 浏览器自动化
-- `markdown-it`: Markdown解析
-- `express`: Web服务器
-- `react`: 前端框架
+## 🔄 开发工作流
 
-### 开发依赖
-- `vite`: 前端构建工具
-- `@vitejs/plugin-react`: React支持
+### 本地开发
+```bash
+# 1. 安装依赖
+npm install
 
-## 🚀 扩展性
+# 2. 启动前端开发服务器
+npm run dev
 
-项目采用模块化设计，便于扩展：
+# 3. 启动后端服务器
+npm start
 
-1. **新增输出格式**: 在`config.js`中添加格式支持
-2. **自定义主题**: 扩展`css-styles.js`中的主题系统
-3. **新增API**: 在`server.js`中添加路由
-4. **前端功能**: 在React组件中添加新特性
+# 4. 构建生产版本
+npm run build
+```
 
-## 🛡️ 安全考虑
+### Docker 开发
+```bash
+# 构建镜像
+docker compose build
 
-- 输入验证和大小限制
-- 浏览器沙箱隔离
-- 资源使用限制
-- 错误信息过滤
+# 启动服务
+docker compose up -d
 
-## 📊 性能优化
+# 查看日志
+docker compose logs -f
+```
 
-- 浏览器实例复用（响应速度提升85%）
-- 智能内容分析
-- WebP格式支持（文件大小减少59%）
-- 预设优化模式
+## 📝 配置文件说明
 
----
+### `package.json`
+```json
+{
+  "name": "mdtopic",
+  "main": "lib/markdown-converter.js",
+  "bin": {
+    "mdtopic": "./index.js"
+  },
+  "scripts": {
+    "start": "node src/server/server.js",
+    "dev": "cd src/web && vite",
+    "build": "cd src/web && vite build"
+  }
+}
+```
 
-📝 更新日期：2025-08-28  
-🔄 项目版本：v2.0.0
+### `docker-compose.yml`
+```yaml
+services:
+  mdtopic:
+    build: .
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
+```
+
+## 🔍 关键文件详解
+
+### `lib/markdown-converter.js`
+核心转换逻辑，包含：
+- `convertMarkdownToImage()`: 主转换函数
+- `convertMarkdownFileToImage()`: 文件转换
+- `convertMarkdownToBase64()`: Base64 输出
+- 样式应用和优化算法
+
+### `src/server/server.js`
+Web 服务器，提供：
+- `POST /api/convert`: 转换接口
+- `GET /api/options`: 配置选项
+- `GET /api/health`: 健康检查
+- 静态文件服务
+
+### `src/web/App.jsx`
+前端主组件，包含：
+- Markdown 编辑器
+- 实时预览
+- 参数配置
+- 文件下载
+
+## 🚀 扩展指南
+
+### 添加新的输出格式
+1. 修改 `lib/markdown-converter.js`
+2. 更新 `src/server/server.js` API
+3. 添加前端配置选项
+
+### 添加新的样式主题
+1. 在 `src/config/css-styles.js` 添加样式
+2. 更新配置选项
+3. 添加前端主题选择器
+
+### 集成新的渲染引擎
+1. 在 `lib/` 目录创建新模块
+2. 实现标准接口
+3. 更新主转换器调用
+
+## 📚 相关文档
+
+- [安装指南](INSTALLATION.md) - 详细安装说明
+- [API 参考](API_REFERENCE.md) - 接口文档
+- [部署指南](DEPLOYMENT.md) - 生产部署
+- [开发指南](DEVELOPMENT.md) - 开发环境
