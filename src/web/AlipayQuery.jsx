@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './AlipayQuery.css';
 
 function AlipayQuery() {
+  useEffect(() => { document.title = '玩家信息查询'; }, []);
   const [queryType, setQueryType] = useState('rid');
   const [queryValue, setQueryValue] = useState('');
   const [result, setResult] = useState(null);
