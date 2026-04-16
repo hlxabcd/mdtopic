@@ -7,6 +7,11 @@ services:
       - "3000:3000"
     restart: unless-stopped
     container_name: mdtopic
+    # 环境变量（二选一：用 environment 或用 volumes 挂载配置文件）
+    # environment:
+    #   - ALIPAY_QUERY_URL=https://your-real-api.com/query
+    volumes:
+      - ./query.config.json:/app/query.config.json:ro
     # 资源限制
     mem_limit: 2g
     cpus: 1

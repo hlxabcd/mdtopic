@@ -5,6 +5,7 @@ const {
   convertMarkdownFileToImage,
   convertMarkdownToBase64 
 } = require('../../lib/markdown-converter');
+const { getAlipayConfig } = require('../config/alipay');
 
 const app = express();
 const port = 3000;
@@ -72,6 +73,48 @@ app.get('/api/options', (req, res) => {
     maxContentLength: 100000,
     note: '智能字体加载：优先使用外部字体，网络问题时自动切换到本地字体确保渲染效果。'
   });
+});
+
+// API路由 - 支付宝信息查询（代理到配置的外部地址）
+app.get('/api/alipay/query', async (req, res) => {
+  try {
+    const { rid, openid } = req.query;
+    if (!rid && !openid) {
+      return res.status(400).json({ error: '请提供 rid 或 openid 参数' });
+    }
+
+    const config = getAlipayConfig();
+    const params = new URLSearchParams();
+    if (rid) params.set('rid', rid);
+    if (openid) params.set('openid', openid);
+
+    const targetUrl = `${config.queryUrl}?${params}`;
+    console.log(`[alipay] 代理查询 -> ${targetUrl}`);
+
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 10000);
+
+    const upstream = await fetch(targetUrl, { signal: controller.signal });
+    clearTimeout(timeoutId);
+
+    if (!upstream.ok) {
+      const text = await upstream.text();
+      return res.status(upstream.status).json({
+        error: `上游服务返回 ${upstream.status}`,
+        detail: text,
+      });
+    }
+
+    const body = await upstream.text();
+    res.set('Content-Type', upstream.headers.get('content-type') || 'application/json');
+    res.send(body);
+  } catch (err) {
+    console.error('[alipay] 查询失败:', err);
+    if (err.name === 'AbortError') {
+      return res.status(504).json({ error: '上游服务超时' });
+    }
+    res.status(500).json({ error: '查询失败', detail: err.message });
+  }
 });
 
 // API路由 - 健康检查
