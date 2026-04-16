@@ -61,7 +61,7 @@ function AlipayQuery() {
 
   return (
     <div className="alipay-query">
-      <h1>信息查询工具</h1>
+      <h1>玩家信息查询</h1>
 
       <div className="query-card">
         <div className="query-form">
