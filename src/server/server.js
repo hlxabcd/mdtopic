@@ -78,17 +78,15 @@ app.get('/api/options', (req, res) => {
 // API路由 - 获取查询类型配置（前端动态渲染）
 app.get('/api/query/config', (req, res) => {
   const queries = getQueryConfig();
-  res.json(queries.map(({ id, label, paramName, placeholder }) => ({
-    id, label, paramName, placeholder,
-  })));
+  res.json(queries.map(({ id, label, params }) => ({ id, label, params })));
 });
 
-// API路由 - 通用查询代理
+// API路由 - 通用查询代理（支持多参数）
 app.get('/api/query/exec', async (req, res) => {
   try {
-    const { queryId, value } = req.query;
-    if (!queryId || !value) {
-      return res.status(400).json({ error: '请提供 queryId 和 value 参数' });
+    const { queryId, ...rest } = req.query;
+    if (!queryId) {
+      return res.status(400).json({ error: '请提供 queryId 参数' });
     }
 
     const queries = getQueryConfig();
@@ -97,7 +95,20 @@ app.get('/api/query/exec', async (req, res) => {
       return res.status(400).json({ error: `未知的查询类型: ${queryId}` });
     }
 
-    const params = new URLSearchParams({ [queryDef.paramName]: value });
+    const params = new URLSearchParams();
+    const missing = [];
+    for (const p of queryDef.params) {
+      const val = rest[p.name];
+      if (!val || !val.trim()) {
+        missing.push(p.label || p.name);
+      } else {
+        params.set(p.name, val.trim());
+      }
+    }
+    if (missing.length) {
+      return res.status(400).json({ error: `缺少参数: ${missing.join(', ')}` });
+    }
+
     const targetUrl = `${queryDef.url}?${params}`;
     console.log(`[query] ${queryDef.label} -> ${targetUrl}`);
 

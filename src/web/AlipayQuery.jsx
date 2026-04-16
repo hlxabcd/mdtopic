@@ -6,7 +6,7 @@ function AlipayQuery() {
 
   const [queryTypes, setQueryTypes] = useState([]);
   const [selectedType, setSelectedType] = useState('');
-  const [queryValue, setQueryValue] = useState('');
+  const [formValues, setFormValues] = useState({});
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
   const [configLoading, setConfigLoading] = useState(true);
@@ -24,9 +24,16 @@ function AlipayQuery() {
   }, []);
 
   const currentType = queryTypes.find(q => q.id === selectedType);
+  const currentParams = currentType?.params || [];
+
+  const setFieldValue = (name, value) => {
+    setFormValues(prev => ({ ...prev, [name]: value }));
+  };
+
+  const allFilled = currentParams.length > 0 && currentParams.every(p => (formValues[p.name] || '').trim());
 
   const handleQuery = async () => {
-    if (!queryValue.trim() || !selectedType) return;
+    if (!allFilled || !selectedType) return;
 
     setLoading(true);
     setError('');
@@ -36,7 +43,11 @@ function AlipayQuery() {
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 15000);
 
-      const params = new URLSearchParams({ queryId: selectedType, value: queryValue.trim() });
+      const params = new URLSearchParams({ queryId: selectedType });
+      for (const p of currentParams) {
+        params.set(p.name, (formValues[p.name] || '').trim());
+      }
+
       const response = await fetch(`/api/query/exec?${params}`, {
         signal: controller.signal,
       });
@@ -73,6 +84,13 @@ function AlipayQuery() {
     }
   };
 
+  const handleTypeChange = (id) => {
+    setSelectedType(id);
+    setFormValues({});
+    setResult(null);
+    setError('');
+  };
+
   if (configLoading) {
     return <div className="alipay-query"><h1>玩家信息查询</h1><div className="loading-hint">加载配置中...</div></div>;
   }
@@ -93,7 +111,7 @@ function AlipayQuery() {
                     name="queryType"
                     value={qt.id}
                     checked={selectedType === qt.id}
-                    onChange={(e) => { setSelectedType(e.target.value); setResult(null); setError(''); }}
+                    onChange={() => handleTypeChange(qt.id)}
                   />
                   <span>{qt.label}</span>
                 </label>
@@ -101,22 +119,24 @@ function AlipayQuery() {
             </div>
           </div>
 
-          <div className="form-row">
-            <label className="form-label">查询参数</label>
-            <input
-              type="text"
-              className="query-input"
-              value={queryValue}
-              onChange={(e) => setQueryValue(e.target.value)}
-              onKeyDown={handleKeyDown}
-              placeholder={currentType?.placeholder || '请输入查询值...'}
-            />
-          </div>
+          {currentParams.map(p => (
+            <div className="form-row" key={p.name}>
+              <label className="form-label">{p.label || p.name}</label>
+              <input
+                type="text"
+                className="query-input"
+                value={formValues[p.name] || ''}
+                onChange={(e) => setFieldValue(p.name, e.target.value)}
+                onKeyDown={handleKeyDown}
+                placeholder={p.placeholder || `请输入${p.label || p.name}...`}
+              />
+            </div>
+          ))}
 
           <button
             className="query-btn"
             onClick={handleQuery}
-            disabled={loading || !queryValue.trim() || !selectedType}
+            disabled={loading || !allFilled || !selectedType}
           >
             {loading ? '查询中...' : '查询'}
           </button>
