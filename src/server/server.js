@@ -5,7 +5,7 @@ const {
   convertMarkdownFileToImage,
   convertMarkdownToBase64 
 } = require('../../lib/markdown-converter');
-const { getAlipayConfig } = require('../config/alipay');
+const { getQueryConfig } = require('../config/alipay');
 
 const app = express();
 const port = 3000;
@@ -75,21 +75,31 @@ app.get('/api/options', (req, res) => {
   });
 });
 
-// API路由 - 支付宝信息查询（代理到配置的外部地址）
-app.get('/api/alipay/query', async (req, res) => {
+// API路由 - 获取查询类型配置（前端动态渲染）
+app.get('/api/query/config', (req, res) => {
+  const queries = getQueryConfig();
+  res.json(queries.map(({ id, label, paramName, placeholder }) => ({
+    id, label, paramName, placeholder,
+  })));
+});
+
+// API路由 - 通用查询代理
+app.get('/api/query/exec', async (req, res) => {
   try {
-    const { rid, openid } = req.query;
-    if (!rid && !openid) {
-      return res.status(400).json({ error: '请提供 rid 或 openid 参数' });
+    const { queryId, value } = req.query;
+    if (!queryId || !value) {
+      return res.status(400).json({ error: '请提供 queryId 和 value 参数' });
     }
 
-    const config = getAlipayConfig();
-    const params = new URLSearchParams();
-    if (rid) params.set('rid', rid);
-    if (openid) params.set('openid', openid);
+    const queries = getQueryConfig();
+    const queryDef = queries.find(q => q.id === queryId);
+    if (!queryDef) {
+      return res.status(400).json({ error: `未知的查询类型: ${queryId}` });
+    }
 
-    const targetUrl = `${config.queryUrl}?${params}`;
-    console.log(`[alipay] 代理查询 -> ${targetUrl}`);
+    const params = new URLSearchParams({ [queryDef.paramName]: value });
+    const targetUrl = `${queryDef.url}?${params}`;
+    console.log(`[query] ${queryDef.label} -> ${targetUrl}`);
 
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 10000);
@@ -109,7 +119,7 @@ app.get('/api/alipay/query', async (req, res) => {
     res.set('Content-Type', upstream.headers.get('content-type') || 'application/json');
     res.send(body);
   } catch (err) {
-    console.error('[alipay] 查询失败:', err);
+    console.error('[query] 查询失败:', err);
     if (err.name === 'AbortError') {
       return res.status(504).json({ error: '上游服务超时' });
     }

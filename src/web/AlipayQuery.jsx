@@ -3,17 +3,30 @@ import './AlipayQuery.css';
 
 function AlipayQuery() {
   useEffect(() => { document.title = '玩家信息查询'; }, []);
-  const [queryType, setQueryType] = useState('rid');
+
+  const [queryTypes, setQueryTypes] = useState([]);
+  const [selectedType, setSelectedType] = useState('');
   const [queryValue, setQueryValue] = useState('');
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [configLoading, setConfigLoading] = useState(true);
   const [error, setError] = useState('');
 
+  useEffect(() => {
+    fetch('/api/query/config')
+      .then(r => r.json())
+      .then(data => {
+        setQueryTypes(data);
+        if (data.length) setSelectedType(data[0].id);
+      })
+      .catch(() => setError('加载查询配置失败'))
+      .finally(() => setConfigLoading(false));
+  }, []);
+
+  const currentType = queryTypes.find(q => q.id === selectedType);
+
   const handleQuery = async () => {
-    if (!queryValue.trim()) {
-      setError('请输入查询参数');
-      return;
-    }
+    if (!queryValue.trim() || !selectedType) return;
 
     setLoading(true);
     setError('');
@@ -23,8 +36,8 @@ function AlipayQuery() {
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 15000);
 
-      const params = new URLSearchParams({ [queryType]: queryValue.trim() });
-      const response = await fetch(`/api/alipay/query?${params}`, {
+      const params = new URLSearchParams({ queryId: selectedType, value: queryValue.trim() });
+      const response = await fetch(`/api/query/exec?${params}`, {
         signal: controller.signal,
       });
 
@@ -60,6 +73,10 @@ function AlipayQuery() {
     }
   };
 
+  if (configLoading) {
+    return <div className="alipay-query"><h1>玩家信息查询</h1><div className="loading-hint">加载配置中...</div></div>;
+  }
+
   return (
     <div className="alipay-query">
       <h1>玩家信息查询</h1>
@@ -69,26 +86,18 @@ function AlipayQuery() {
           <div className="form-row">
             <label className="form-label">查询类型</label>
             <div className="radio-group">
-              <label className={`radio-option ${queryType === 'rid' ? 'active' : ''}`}>
-                <input
-                  type="radio"
-                  name="queryType"
-                  value="rid"
-                  checked={queryType === 'rid'}
-                  onChange={(e) => setQueryType(e.target.value)}
-                />
-                <span>rid</span>
-              </label>
-              <label className={`radio-option ${queryType === 'openid' ? 'active' : ''}`}>
-                <input
-                  type="radio"
-                  name="queryType"
-                  value="openid"
-                  checked={queryType === 'openid'}
-                  onChange={(e) => setQueryType(e.target.value)}
-                />
-                <span>openid</span>
-              </label>
+              {queryTypes.map(qt => (
+                <label key={qt.id} className={`radio-option ${selectedType === qt.id ? 'active' : ''}`}>
+                  <input
+                    type="radio"
+                    name="queryType"
+                    value={qt.id}
+                    checked={selectedType === qt.id}
+                    onChange={(e) => { setSelectedType(e.target.value); setResult(null); setError(''); }}
+                  />
+                  <span>{qt.label}</span>
+                </label>
+              ))}
             </div>
           </div>
 
@@ -100,14 +109,14 @@ function AlipayQuery() {
               value={queryValue}
               onChange={(e) => setQueryValue(e.target.value)}
               onKeyDown={handleKeyDown}
-              placeholder={`请输入 ${queryType}...`}
+              placeholder={currentType?.placeholder || '请输入查询值...'}
             />
           </div>
 
           <button
             className="query-btn"
             onClick={handleQuery}
-            disabled={loading || !queryValue.trim()}
+            disabled={loading || !queryValue.trim() || !selectedType}
           >
             {loading ? '查询中...' : '查询'}
           </button>

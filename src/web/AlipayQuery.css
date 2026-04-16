@@ -204,6 +204,14 @@
   }
 }
 
+/* Loading hint */
+.loading-hint {
+  text-align: center;
+  color: #94a3b8;
+  font-size: 15px;
+  padding: 40px 0;
+}
+
 /* Mobile */
 @media (max-width: 640px) {
   .alipay-query {
